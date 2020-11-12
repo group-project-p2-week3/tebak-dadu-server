@@ -10,6 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 let usersJoined = [];
+let answers = []
 
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -20,9 +21,17 @@ io.on('connection', (socket) => {
 
     io.emit('userLogin', usersJoined)
   })
-
+  
+  socket.on('insertAnswers', (data) => {
+    if (answers.length === 4) {
+      answers = []
+    }
+    answers.push(data)
+    io.emit('insetAnswers', answers)
+  })
+  
 });
 
 http.listen(PORT, () => {
-  console.log('listening on *:3000');
+  console.log('listening on http://localhost:3000');
 });
