@@ -17,6 +17,8 @@ io.on('connection', (socket) => {
   socket.on('userLogin', (username) => {
     usersJoined.push(username)
     console.log(usersJoined);
+
+    io.emit('userLogin', usersJoined)
   })
 
 });
