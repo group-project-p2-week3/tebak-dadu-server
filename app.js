@@ -57,6 +57,8 @@ io.on('connection', (socket) => {
     img = img_list[number]
     io.emit('changeDice', img)
   })
+
+  
 });
 
 http.listen(PORT, () => {
