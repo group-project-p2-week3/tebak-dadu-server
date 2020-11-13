@@ -11,6 +11,8 @@ app.use(express.urlencoded({extended:false}))
 
 let usersJoined = [];
 let answers = []
+let isWinning = false
+let winners = ''
 const img_list = [
   '',
   'https://i.imgur.com/MFF46Ba.png',
@@ -49,7 +51,21 @@ io.on('connection', (socket) => {
       if (winner.includes(el.username)) {
         el.score += 10
       }
+      if (el.score === 30) {
+        winners = el.username
+        isWinning = true
+      }
     })
+    if (isWinning) {
+      io.emit('getWinners', winners)
+      answers = []
+      io.emit('insetAnswers', answers)
+      usersJoined.forEach(el => {
+        el.score = 0
+      })
+      isWinning = false
+    }
+
     io.emit('updateScore', usersJoined)
   })
 
