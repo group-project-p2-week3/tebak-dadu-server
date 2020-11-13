@@ -11,13 +11,25 @@ app.use(express.urlencoded({extended:false}))
 
 let usersJoined = [];
 let answers = []
+const img_list = [
+  '',
+  'https://i.imgur.com/MFF46Ba.png',
+  'https://i.imgur.com/5YvvV3i.png',
+  'https://i.imgur.com/wMBE60f.png',
+  'https://i.imgur.com/ozv1iAb.png',
+  'https://i.imgur.com/lH3h1n9.png',
+  'https://i.imgur.com/LcAfJnK.png'
+]
+let img = ''
 
 io.on('connection', (socket) => {
   console.log('a user connected');
 
   socket.on('userLogin', (username) => {
-    usersJoined.push(username)
-    console.log(usersJoined);
+    usersJoined.push({
+      username: username,
+      score: 0
+    })
 
     io.emit('userLogin', usersJoined)
   })
@@ -29,7 +41,22 @@ io.on('connection', (socket) => {
     answers.push(data)
     io.emit('insetAnswers', answers)
   })
-  
+
+  socket.on('addScore', (data) => {
+    const winner = data.map(el => el.username)
+    console.log(winner)
+    usersJoined.forEach(el => {
+      if (winner.includes(el.username)) {
+        el.score += 10
+      }
+    })
+    io.emit('updateScore', usersJoined)
+  })
+
+  socket.on('changeDice', number => {
+    img = img_list[number]
+    io.emit('changeDice', img)
+  })
 });
 
 http.listen(PORT, () => {
