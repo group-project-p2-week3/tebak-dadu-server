@@ -41,17 +41,16 @@ io.on('connection', (socket) => {
       answers = []
     }
     answers.push(data)
-    io.emit('insetAnswers', answers)
+    io.emit('insertAnswers', answers)
   })
 
   socket.on('addScore', (data) => {
     const winner = data.map(el => el.username)
-    console.log(winner)
     usersJoined.forEach(el => {
       if (winner.includes(el.username)) {
         el.score += 10
       }
-      if (el.score === 30) {
+      if (el.score === 50) {
         winners.push(el.username)
         isWinning = true
       }
@@ -71,6 +70,8 @@ io.on('connection', (socket) => {
     img = img_list[number]
     io.emit('changeDice', img)
   })
+
+  
 });
 
 http.listen(PORT, () => {
