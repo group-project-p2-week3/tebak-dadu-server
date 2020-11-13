@@ -11,14 +11,14 @@ app.use(express.urlencoded({extended:false}))
 
 let usersJoined = [];
 let answers = []
+let diceNumber = 0
 
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  socket.on('userLogin', (username) => {
-    usersJoined.push(username)
+  socket.on('userLogin', (dataUser) => {
+    usersJoined.push(dataUser)
     console.log(usersJoined);
-
     io.emit('userLogin', usersJoined)
   })
   
@@ -28,6 +28,12 @@ io.on('connection', (socket) => {
     }
     answers.push(data)
     io.emit('insetAnswers', answers)
+  })
+
+  socket.on('getDiceNumber', (number) => {
+    diceNumber = number
+    console.log(diceNumber);
+    io.emit('getDice', diceNumber)
   })
   
 });
